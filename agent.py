@@ -8,11 +8,10 @@ import sys
 import dbus
 import dbus.service
 import dbus.mainloop.glib
-from optparse import OptionParser
+#from optparse import OptionParser
 
 BUS_NAME = 'org.bluez'
 AGENT_INTERFACE = 'org.bluez.Agent1'
-AGENT_PATH = "/temp/agent"
 
 bus = None
 device_obj = None
@@ -135,19 +134,19 @@ if __name__ == '__main__':
 
 	bus = dbus.SystemBus()
 
-	parser = OptionParser()
-	parser.add_option("-i", "--adapter", action="store",
-					type="string",
-					dest="adapter_pattern",
-					default=None)
-	parser.add_option("-c", "--capability", action="store",
-					type="string", dest="capability")
-	parser.add_option("-t", "--timeout", action="store",
-					type="int", dest="timeout",
-					default=60000)
-	(options, args) = parser.parse_args()
-	if options.capability:
-		capability  = options.capability
+	# parser = OptionParser()
+	# parser.add_option("-i", "--adapter", action="store",
+	# 				type="string",
+	# 				dest="adapter_pattern",
+	# 				default=None)
+	# parser.add_option("-c", "--capability", action="store",
+	# 				type="string", dest="capability")
+	# parser.add_option("-t", "--timeout", action="store",
+	# 				type="int", dest="timeout",
+	# 				default=60000)
+	# (options, args) = parser.parse_args()
+	# if options.capability:
+	# 	capability  = options.capability
 
 	agent = Agent(bus, path)
 
@@ -155,11 +154,8 @@ if __name__ == '__main__':
 
 	obj = bus.get_object(BUS_NAME, "/org/bluez");
 	manager = dbus.Interface(obj, "org.bluez.AgentManager1")
-	manager.RegisterAgent('/tmp/agent', capability)
+	manager.RegisterAgent(path, capability)
 
 	print("Agent registered")
 	manager.RequestDefaultAgent(path)
 	mainloop.run()
-
-	#adapter.UnregisterAgent(path)
-	#print("Agent unregistered")
